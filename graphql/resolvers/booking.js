@@ -1,9 +1,11 @@
 const Booking = require("../../modal/bookings");
+const Event = require('../../modal/event');
 const {transformBooking , transformEvent} = require('./merge');
 
 
 module.exports = {
-  // find booking form document
+
+  // find booking form server
   bookings: async () => {
     try {
       const bookings = await Booking.find();
@@ -14,13 +16,14 @@ module.exports = {
       throw err;
     }
   },
+
   bookEvent: async (args , req) => {
     if(!req.isAuth) {
       throw new Error('unauthenticated');
     }
     try {
       const fetchedEvent = await Event.findOne({ _id: args.eventId });
-      const bookedEvent = await new Booking({
+      const bookedEvent =  new Booking({
         event: fetchedEvent,
         user: req.userData.userId
       });
